@@ -7,6 +7,10 @@ char *buffer;
 char *temp_buffer;
 ssize_t bytes_read;
 
+buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+if (!buffer)
+    return 0; 
+
 bytes_read = 1;
 while (bytes_read > 0) //Read return 0 end of file.
 {
@@ -15,14 +19,10 @@ while (bytes_read > 0) //Read return 0 end of file.
         return 0;
     if(bytes_read < BUFFER_SIZE) //This mean that there are less character in file than BUFFERSIZE
     {
-        buffer = (char *)malloc(((BUFFER_SIZE - bytes_read) + 1) * sizeof(char));
+        temp_buffer = (char *)malloc(((BUFFER_SIZE - bytes_read) + 1) * sizeof(char));
+        temp_buffer = buffer;
     }
-    else
-    {
-        buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-    }
-    if (!buffer)
-        return 0; 
+ 
     buffer[bytes_read] = '\0';
 }
 return buffer;
