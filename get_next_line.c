@@ -1,85 +1,116 @@
-/*
-    open: int open(const char *pathname, int flags)
-    read: size_t read (int fd, void *buf, size_t count)
-*/
-/*
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtorrez- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/27 15:49:52 by jtorrez-          #+#    #+#             */
+/*   Updated: 2023/05/27 15:56:40 by jtorrez-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
- char    *get_next_line(int fd)
+static char	*get_all_lines(int fd)
 {
-    char        buf[BUFFER_SIZE];
-    static char *stash;
-    char        *line;
-    ssize_t     bytes_read;
-    size_t      i;
-    size_t      count;
-    char    *str2;  
+	char			*buffer;
+	ssize_t			bytes_read;
+	static	char	*stash;
 
+	stash = NULL; //Initialize stash with an empty string. 
+	if (stash == NULL) 
+			stash = ft_strdup(""); //Initialize with a valid memory address, (use ft_strjoin)
+
+	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
+		return 0; 
+
+	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0) //Read return 0 end of file.
+	{
+    	if(bytes_read == -1) //Return -1, error. 
+    	{
+			return NULL;
+    	}
+		stash = ft_strjoin(stash, buffer); 
+		buffer[bytes_read] = '\0';
     
-    i = 0;
-    count = 5;
-    bytes_read = read(fd, buf, count);
-    if (fd == -1)
-        return NULL;
-    if (bytes_read == 0)
-        return NULL;
-   buf[bytes_read] = '\0'; 
-
-    stash = ft_strdup(buf);
-
-    while (ft_strchr(stash, '\n')!= NULL)
-    {
-        read(fd, buf, count);
-        stash = ft_strjoin(buf, stash);
-    }
-    buf[bytes_read] = '\0'; 
-    return stash;
-  
+	}
+	free (buffer);
+	return (stash);
 }
 
-int main(void)
+static char *get_line(char *stash)
 {
-    int fd = open("/nfs/homes/jtorrez-/Documents/get_next_line/text", O_RDONLY);
-    char *result;
-    char *result1;
+	static char	*line = NULL; // Initialize line as NULL
+	static int	start = 0; // Initialize start as 0
+	size_t	len;
+	size_t	i;
 
-    result = get_next_line(fd);
-    printf("%s\n", result);
-
-    result1 = ft_strchr(result, '\n');
-    if (result1 != NULL)
-    {
-        printf("CHARACTER FOUND\n");
-    }
-    else 
-    {
-        printf("CHARACTER NOT FOUND\n");
-    }
+	char *result = ft_strchr(stash + start, '\n'); // Search for '\n' starting from the start position
+	i = 0;
+	if (result != NULL)
+	{
+		len = result - (stash + start); // Calculate the length of the line        
+		line = (char *)malloc((len + 1) * sizeof(char)); // Allocate memory for the line  
+		if (line != NULL)
+		{   
+			while (i < len)
+			{
+				line[i] = stash[start + i]; // Copy each character of the line
+				i++;
+			}
+			line[len] = '\0'; // Add null-termination at the end of the line
+		}
+		start += len + 1; // Update the start position for the next line
+	}
+	else
+	{
+		line = NULL; // Reset line to NULL if no more lines are found
+	}
+	return line;
+	free (line);
 }
 
+char *get_next_line(int fd)
+{
+	char *new_line;
+    static char *stash = NULL;
 
+    if (stash == NULL)
+        stash = get_all_lines(fd);
+
+    new_line = get_line(stash);
+    return new_line;
+}
 /*
 int main(void)
 {
-    int fd = open("/nfs/homes/jtorrez-/Documents/get_next_line/text", O_RDONLY);
-    char buf[10];
-    size_t nbr_bytes;
+    int fd = open("text.txt", O_RDONLY);
+    char *result;
+    char *line;
+	char *final_result; */ 
 
-    if (fd == -1)
-    {
-        printf("There has been an error trying to open the file\n");
-    }
-    else
-    {
-        nbr_bytes = read(fd, buf, 5);
-        if (nbr_bytes == 0)
-        {
-            printf("File is empty\n");
-        }
-        else
-        {
-            printf("Character is: %d, Content: %s\n", (int)nbr_bytes, buf);
-        }
-        
-    }
-}   */
+   /* result = get_all_lines(fd);
+    line = get_line(result);
+    printf("%s\n", result);
+    printf("****************\n");
+    printf("%s\n", line);
+
+    line = get_line(result);
+    printf("%s\n", line);
+
+    line = get_line(result);
+    printf("%s\n", line);
+
+    line = get_line(result);
+    printf("%s\n", line);	*/
+/*
+	printf("****************\n");
+	final_result = get_next_line(fd);
+	printf("%s\n", final_result);
+	final_result = get_next_line(fd);
+	printf("%s\n", final_result);
+	final_result = get_next_line(fd);
+	printf("%s\n", final_result);
+}	*/	
