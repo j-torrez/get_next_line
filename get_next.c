@@ -4,29 +4,29 @@ char *get_next(int fd)
 {
 
 char *buffer;
-char *temp_buffer;
 ssize_t bytes_read;
+static char *stash;
+
+stash = NULL; //Initialize stash with an empty string. 
+if (stash == NULL) 
+    stash = ft_strdup(""); //Initialize with a valid memory address, (use ft_strjoin)
 
 buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 if (!buffer)
     return 0; 
 
-bytes_read = 1;
-while (bytes_read > 0) //Read return 0 end of file.
+while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0) //Read return 0 end of file.
 {
-    bytes_read = read(fd, buffer, BUFFER_SIZE);
     if(bytes_read == -1) //Return -1, error. 
-        return 0;
-    if(bytes_read < BUFFER_SIZE) //This mean that there are less character in file than BUFFERSIZE
     {
-        temp_buffer = (char *)malloc(((BUFFER_SIZE - bytes_read) + 1) * sizeof(char));
-        temp_buffer = buffer;
+        return NULL;
     }
- 
+    stash = ft_strjoin(stash, buffer); 
     buffer[bytes_read] = '\0';
+    
 }
-return buffer;
-
+free (buffer);
+return (stash);
 }
 
 int main(void)
