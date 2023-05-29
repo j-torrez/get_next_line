@@ -83,13 +83,13 @@ char *get_next_line(int fd)
     new_line = get_line(stash);
     return new_line;
 }
-/*
+
 int main(void)
 {
     int fd = open("text.txt", O_RDONLY);
     char *result;
     char *line;
-	char *final_result; */ 
+	char *final_result;  
 
    /* result = get_all_lines(fd);
     line = get_line(result);
@@ -105,7 +105,7 @@ int main(void)
 
     line = get_line(result);
     printf("%s\n", line);	*/
-/*
+
 	printf("****************\n");
 	final_result = get_next_line(fd);
 	printf("%s\n", final_result);
@@ -113,4 +113,4 @@ int main(void)
 	printf("%s\n", final_result);
 	final_result = get_next_line(fd);
 	printf("%s\n", final_result);
-}	*/	
+}		
