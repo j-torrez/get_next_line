@@ -1,6 +1,6 @@
 #include "get_next_line.h"
 
-char *ft_display_line(char *stash)
+char *ft_get_line(char *stash)
 {
 	int		i;
 	char	*str;

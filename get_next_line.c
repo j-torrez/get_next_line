@@ -1,25 +1,27 @@
 #include "get_next_line.h"
 
 /* Extract a line from stash and return it*/
-
-static char	*ft_read_first_line(int fd, char *stash)
+//Initialize stash with an empty string. 
+//Initialize with a valid memory address, (use ft_strjoin)
+static char	*ft_read_line(int fd, char *stash)
 {
 	char			*buffer;
 	ssize_t			bytes_read;
 
-	stash = NULL; //Initialize stash with an empty string. 
+	stash = NULL; 
 	if (stash == NULL) 
-			stash = ft_strdup(""); //Initialize with a valid memory address, (use ft_strjoin)
+			stash = ft_strdup(""); 
 
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return 0; 
 
     bytes_read = 1;
-	while (ft_strchr(stash, '\n') == NULL && bytes_read > 0) //Loop continue as long '\n' is not found in Stash. 
+    /*Loop continue as long '\n' is not found in Stash.*/ 
+	while (ft_strchr(stash, '\n') == NULL && bytes_read > 0) 
 	{
         bytes_read = read(fd, buffer, BUFFER_SIZE);
-            if (bytes_read == -1) //Return -1, error. 
+            if (bytes_read == -1)
     	    {
                 free (buffer);
                 return (NULL);
@@ -70,10 +72,10 @@ char    *get_next_line(int fd)
 
     if (fd < 0)
         return 0; 
-    stash = ft_read_first_line(fd, stash);
+    stash = ft_read_line(fd, stash);
     if (!stash)
         return (NULL);
-    line = ft_display_line(stash);
+    line = ft_get_line(stash);
     stash = ft_save_remaining_lines(stash);
     return (line);
 }
