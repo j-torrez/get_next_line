@@ -1,16 +1,27 @@
-#include "get_next_line.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtorrez- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 18:37:01 by jtorrez-          #+#    #+#             */
+/*   Updated: 2023/05/29 18:39:50 by jtorrez-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-char *ft_get_line(char *stash)
+#include "get_next_line.h"
+/*Enough space to store the line, newline character and Null terminator*/
+char	*ft_get_line(char *stash)
 {
 	int		i;
 	char	*str;
 
-	i = 0; 
+	i = 0;
 	if (!stash[i])
 		return (NULL);
-	while (stash[i] != '\0'&& stash[i] != '\n')
+	while (stash[i] != '\0' && stash[i] != '\n')
 		i++;
-/*Enough space to store the line, newline character and Null terminator*/
 	str = (char *)malloc(sizeof(char) * (i + 2));
 	if (!str)
 		return (NULL);
@@ -27,7 +38,6 @@ char *ft_get_line(char *stash)
 	}
 	str[i] = '\0';
 	return (str);
-
 }
 
 size_t	ft_strlen(const char *s)
@@ -147,7 +157,3 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	}
 	return (dest);
 }
-
-
-
-

@@ -1,33 +1,43 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtorrez- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 17:54:08 by jtorrez-          #+#    #+#             */
+/*   Updated: 2023/05/29 18:26:47 by jtorrez-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 /* Extract a line from stash and return it*/
 //Initialize stash with an empty string. 
-//Initialize with a valid memory address, (use ft_strjoin)
+//Initialize with a valid memory address, (use ft_strjoini)
+/*Loop continue as long '\n' is not found in Stash.*/
 static char	*ft_read_line(int fd, char *stash)
 {
 	char			*buffer;
 	ssize_t			bytes_read;
 
-	stash = NULL; 
-	if (stash == NULL) 
-			stash = ft_strdup(""); 
-
+	stash = NULL;
+	if (stash == NULL)
+		stash = ft_strdup("");
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
-		return 0; 
-
-    bytes_read = 1;
-    /*Loop continue as long '\n' is not found in Stash.*/ 
-	while (ft_strchr(stash, '\n') == NULL && bytes_read > 0) 
+		return (0);
+	bytes_read = 1;
+	while (ft_strchr(stash, '\n') == NULL && bytes_read > 0)
 	{
-        bytes_read = read(fd, buffer, BUFFER_SIZE);
-            if (bytes_read == -1)
-    	    {
-                free (buffer);
-                return (NULL);
-    	    }
-        buffer[bytes_read] = '\0';
-        stash = ft_strjoin(stash, buffer);
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read == -1)
+		{
+			free (buffer);
+			return (NULL);
+		}
+		buffer[bytes_read] = '\0';
+		stash = ft_strjoin(stash, buffer);
 	}
 	free (buffer);
 	return (stash);
@@ -35,55 +45,54 @@ static char	*ft_read_line(int fd, char *stash)
 /* Removes the first line from the string "stash", creates a new string
 with the remaining lines, frees the memory of the original "stash"
 and return the new string*/
-static char *ft_save_remaining_lines(char *stash)
-{
-    int i;
-    int j;
-    char    *str;
 
-    i = 0; 
-    while (stash[i] != '\0' && stash[i] != '\0')
-        i++;
-    if (stash[i] == '\0')
-    {
-        free(stash);
-        return (NULL);
-    }
-    str = (char *)malloc(sizeof(char) * (ft_strlen(stash) - i + 1));
-    if (!str)
-        return (NULL);
-    i++;
-    j = 0;
-    while (stash[i] != '\0')
-    {
-        str[j + i] = stash[i];
-        i++;
-        j++;
-    }
-    str[j] = '\0';
-    free(stash);
-    return (str);
+static char	*ft_save_remaining_lines(char *stash)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	i = 0;
+	while (stash[i] != '\0' && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\0')
+	{
+		free(stash);
+		return (NULL);
+	}
+	str = (char *)malloc(sizeof(char) * (ft_strlen(stash) - i + 1));
+	if (!str)
+		return (NULL);
+	i++;
+	j = 0;
+	while (stash[i] != '\0')
+	{
+		str[j++] = stash[i++];
+	}
+	str[j] = '\0';
+	free(stash);
+	return (str);
 }
 
-char    *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-    char *line;
-    static char *stash; 
+	char		*line;
+	static char	*stash;
 
-    if (fd < 0)
-        return 0; 
-    stash = ft_read_line(fd, stash);
-    if (!stash)
-        return (NULL);
-    line = ft_get_line(stash);
-    stash = ft_save_remaining_lines(stash);
-    return (line);
+	if (fd < 0)
+		return (0);
+	stash = ft_read_line(fd, stash);
+	if (!stash)
+		return (NULL);
+	line = ft_get_line(stash);
+	stash = ft_save_remaining_lines(stash);
+	return (line);
 }
-
-int main(void)
+/*
+int	main(void)
 {
-    int fd = open("text.txt", O_RDONLY);
-    char *result;
+	int fd = open("text.txt", O_RDONLY);
+	char	*result;
 
     result = get_next_line(fd);
     printf("%s", result);
@@ -91,4 +100,4 @@ int main(void)
     printf("%s", result);
 
 
-}   
+}	*/
