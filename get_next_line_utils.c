@@ -1,5 +1,35 @@
 #include "get_next_line.h"
 
+char *ft_display_line(char *stash)
+{
+	int		i;
+	char	*str;
+
+	i = 0; 
+	if (!stash[i])
+		return (NULL);
+	while (stash[i] != '\0'&& stash[i] != '\n')
+		i++;
+/*Enough space to store the line, newline character and Null terminator*/
+	str = (char *)malloc(sizeof(char) * (i + 2));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (stash[i] != '\0' && stash [i] != '\n')
+	{
+		str[i] = stash[i];
+		i++;
+	}
+	if (stash[i] == '\n')
+	{
+		str[i] = stash [i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
+
+}
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -117,5 +147,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	}
 	return (dest);
 }
+
+
 
 
