@@ -16,6 +16,15 @@
 //Initialize stash with an empty string. 
 //Initialize with a valid memory address, (use ft_strjoini)
 /*Loop continue as long '\n' is not found in Stash.*/
+static char	*ft_free(char *stash, char *buffer)
+{
+	char	*temp;
+
+	temp = ft_strjoin(stash, buffer);
+	free(stash);
+	return (temp);
+}
+
 static char	*ft_read_line(int fd, char *stash)
 {
 	char			*buffer;
@@ -25,9 +34,9 @@ static char	*ft_read_line(int fd, char *stash)
 		stash = ft_strdup("");
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
-		return (0);
+		return (NULL);
 	bytes_read = 1;
-	while (ft_strchr(stash, '\n') == NULL && bytes_read > 0)
+	while (ft_strchr(stash, '\n') == NULL && bytes_read != 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
@@ -36,7 +45,7 @@ static char	*ft_read_line(int fd, char *stash)
 			return (NULL);
 		}
 		buffer[bytes_read] = '\0';
-		stash = ft_strjoin(stash, buffer);
+		stash = ft_free(stash, buffer);
 	}
 	free (buffer);
 	return (stash);
@@ -107,8 +116,8 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*stash;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (0);
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+		return (NULL);
 	stash = ft_read_line(fd, stash);
 	if (!stash)
 		return (NULL);
@@ -124,14 +133,11 @@ int	main(void)
 
     result = get_next_line(fd);
     printf("%s", result);
+	free(result);
 
 
     result = get_next_line(fd);
     printf("%s", result);
-	
-
-	result = get_next_line(fd);
-    printf("%s", result);
-	
 	close(fd);
-}	*/
+	free(result);
+}*/
