@@ -11,34 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-/*Enough space to store the line, newline character and Null terminator*/
-char	*ft_get_line(char *stash)
-{
-	int		i;
-	char	*str;
-
-	i = 0;
-	if (!stash[i])
-		return (NULL);
-	while (stash[i] != '\0' && stash[i] != '\n')
-		i++;
-	str = (char *)malloc(sizeof(char) * (i + 2));
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (stash[i] != '\0' && stash [i] != '\n')
-	{
-		str[i] = stash[i];
-		i++;
-	}
-	if (stash[i] == '\n')
-	{
-		str[i] = stash [i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
 
 size_t	ft_strlen(const char *s)
 {
@@ -96,24 +68,28 @@ char	*ft_strchr(const char *s, int c)
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t	s_len;
+	size_t	count;
 	size_t	size;
-	char	*sub;
+	char	*tab;
 
+	tab = (char *)malloc((len + 1) * sizeof(char));
 	if (!s)
-		return (0);
-	s_len = ft_strlen(s);
-	if (start > s_len)
+		return (NULL);
+	if ((unsigned int)ft_strlen(s) < start)
 		return (ft_strdup(""));
-	if (start + len > s_len)
-		len = s_len - start;
-	size = len + 1;
-	sub = (char *) malloc(size * sizeof(char));
-	if (!sub)
-		return (0);
-	ft_memcpy(sub, s + start, len);
-	sub[len] = '\0';
-	return (sub);
+	size = ft_strlen(s + start);
+	if (size < len)
+		len = size;
+	if (!(tab))
+		return (NULL);
+	count = 0;
+	while (count < len)
+	{
+		tab[count] = s[start + count];
+		count++;
+	}
+	tab[count] = '\0';
+	return (tab);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -141,19 +117,4 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	str[i + j] = '\0';
 	return (str);
-}
-
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	size_t	i;
-
-	if (!dest && !src)
-		return (0);
-	i = 0;
-	while (i < n)
-	{
-		((unsigned char *)dest)[i] = ((unsigned char *)src)[i];
-		i++;
-	}
-	return (dest);
 }

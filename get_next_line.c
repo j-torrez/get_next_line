@@ -42,6 +42,35 @@ static char	*ft_read_line(int fd, char *stash)
 	free (buffer);
 	return (stash);
 }
+
+/*Enough space to store the line, newline character and Null terminator*/
+char	*ft_get_line(char *stash)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	if (!stash[i])
+		return (NULL);
+	while (stash[i] != '\0' && stash[i] != '\n')
+		i++;
+	str = (char *)malloc(sizeof(char) * (i + 2));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (stash[i] != '\0' && stash [i] != '\n')
+	{
+		str[i] = stash[i];
+		i++;
+	}
+	if (stash[i] == '\n')
+	{
+		str[i] = stash [i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
+}
 /* Removes the first line from the string "stash", creates a new string
 with the remaining lines, frees the memory of the original "stash"
 and return the new string*/
