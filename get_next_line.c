@@ -21,7 +21,6 @@ static char	*ft_read_line(int fd, char *stash)
 	char			*buffer;
 	ssize_t			bytes_read;
 
-	stash = NULL;
 	if (stash == NULL)
 		stash = ft_strdup("");
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
@@ -84,7 +83,7 @@ static char	*ft_save_remaining_lines(char *stash)
 	i = 0;
 	while (stash[i] != '\0' && stash[i] != '\n')
 		i++;
-	if (stash[i] == '\0')
+	if (!stash[i])
 	{
 		free(stash);
 		return (NULL);
@@ -108,7 +107,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*stash;
 
-	if (fd < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
 	stash = ft_read_line(fd, stash);
 	if (!stash)
@@ -125,8 +124,14 @@ int	main(void)
 
     result = get_next_line(fd);
     printf("%s", result);
+
+
     result = get_next_line(fd);
     printf("%s", result);
+	
 
-
+	result = get_next_line(fd);
+    printf("%s", result);
+	
+	close(fd);
 }	*/

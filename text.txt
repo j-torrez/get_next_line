@@ -1,7 +1,4 @@
-Hellofasfasfaf
-my name is Juan 
-how are you
-I live in Berlin
-and it is good
-one one one
-two
+1st line: Hello
+2nd line: how
+3rd line: are
+4th line: you
