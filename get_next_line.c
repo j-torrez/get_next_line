@@ -13,8 +13,8 @@
 #include "get_next_line.h"
 
 /* Extract a line from stash and return it*/
-//Initialize stash with an empty string. 
-//Initialize with a valid memory address, (use ft_strjoini)
+// Initialize stash with an empty string.
+// Initialize with a valid memory address, (use ft_strjoini)
 /*Loop continue as long '\n' is not found in Stash.*/
 static char	*ft_free(char *stash, char *buffer)
 {
@@ -27,8 +27,8 @@ static char	*ft_free(char *stash, char *buffer)
 
 static char	*ft_read_line(int fd, char *stash)
 {
-	char			*buffer;
-	ssize_t			bytes_read;
+	char	*buffer;
+	ssize_t	bytes_read;
 
 	if (stash == NULL)
 		stash = ft_strdup("");
@@ -41,17 +41,17 @@ static char	*ft_read_line(int fd, char *stash)
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
 		{
-			free (buffer);
+			free(buffer);
 			return (NULL);
 		}
 		buffer[bytes_read] = '\0';
 		stash = ft_free(stash, buffer);
 	}
-	free (buffer);
+	free(buffer);
 	return (stash);
 }
-
 /*Enough space to store the line, newline character and Null terminator*/
+
 char	*ft_get_line(char *stash)
 {
 	int		i;
@@ -66,14 +66,14 @@ char	*ft_get_line(char *stash)
 	if (!str)
 		return (NULL);
 	i = 0;
-	while (stash[i] != '\0' && stash [i] != '\n')
+	while (stash[i] != '\0' && stash[i] != '\n')
 	{
 		str[i] = stash[i];
 		i++;
 	}
 	if (stash[i] == '\n')
 	{
-		str[i] = stash [i];
+		str[i] = stash[i];
 		i++;
 	}
 	str[i] = '\0';
@@ -117,7 +117,11 @@ char	*get_next_line(int fd)
 	static char	*stash;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	{
+		free(stash);
+		stash = NULL;
 		return (NULL);
+	}
 	stash = ft_read_line(fd, stash);
 	if (!stash)
 		return (NULL);
@@ -131,13 +135,13 @@ int	main(void)
 	int fd = open("text.txt", O_RDONLY);
 	char	*result;
 
-    result = get_next_line(fd);
-    printf("%s", result);
+	result = get_next_line(fd);
+	printf("%s", result);
 	free(result);
 
 
-    result = get_next_line(fd);
-    printf("%s", result);
+	result = get_next_line(fd);
+	printf("%s", result);
 	close(fd);
 	free(result);
 }*/
